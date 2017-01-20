@@ -220,7 +220,7 @@ app.get('/foo', function(req, res) {
 	})
 	res.send('foo');
 })
-var port = 
+var port = 8791;
 app.listen(port);
 console.log('magic happens on port ' + port);
 exports = module.exports = app;
