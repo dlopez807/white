@@ -15,18 +15,32 @@ app.get('/', function(req, res) {
 	var file = fs.readFileSync('lastnames.json');
 	var lastnames = JSON.parse(file);
 
-	var out = {};
+	var streets = {};
 	$('.unstyled.grid-list-2.no-overflow > li').each(function() {
+
+		// get the address
 		var address = $('.title', this).text();
 		var addressArray = address.split(' ');
-		var street = addressArray[addressArray.length - 2];
+		var apt = '';
+		if (addressArray[addressArray.length - 2] != 'Apt') {
+			var street = addressArray[addressArray.length - 2] + ' ' + addressArray[addressArray.length - 1];
+		}
+		else {
+			var street = addressArray[addressArray.length - 4] + ' ' + addressArray[addressArray.length - 3];
+			apt = addressArray[addressArray.length - 2] + ' ' + addressArray[addressArray.length - 1];
+		}
+		
 		var streetNumber = addressArray[0];
 		if (addressArray[1].indexOf('/') > -1)
-			streetNumber += ' ' + addressArray[1]; 
+			streetNumber += ' ' + addressArray[1];
+		streetNumber += apt;
+
+		// get the last name
 		var text = $('.subtitle', this).text().trim();
 		if (text.indexOf('No current residents listed for this location') < 0) {
 			name = text.split(' res')[0].split(' and')[0];
 			var names = name.split(' ');
+			var first = names[0];
 			var last = names[names.length - 1];
 			if (last == 'Sr.' || last == 'Jr.')
 				last = names[names.length - 2];
@@ -36,11 +50,11 @@ app.get('/', function(req, res) {
 				if (number != 'NF' && parseInt(number) > 3) {
 
 					console.log(last + ' ' + number + '\n' + address + '\n');
-					if (out[street]) {
-						out[street].push(streetNumber + '\t' + last);
+					if (streets[street]) {
+						streets[street].push(streetNumber + '\t' + first + ' ' + last + '\t' + number);
 					}
 					else {
-						out[street] = [streetNumber + '\t' + last];
+						streets[street] = [streetNumber + '\t' + first + ' ' + last + '\t' + number];
 					}
 
 
@@ -55,7 +69,6 @@ app.get('/', function(req, res) {
 
 				request(options, function(error, response, html) {
 
-					// make sure no errors when making request
 					if (!error) {
 
 						var $ = cheerio.load(html);
@@ -67,15 +80,12 @@ app.get('/', function(req, res) {
 							var text = $('.FL_LabelxSmall', this).text();
 							if (text == 'Philippines') {
 								noFilipinos = false;
-								//console.log('we found one');
 								number = $('.FL_LabelDimmedxSmall', $(this).next()).text();
 								number = number.trim().replace('(', '').replace('%', '').replace(')', '');
 								lastnames[last] = parseInt(number);
 							}
 						})
-						if (noFilipinos) {
-							//console.log(name + ' has no Filipinos');
-							number = 'NF';
+						if (noFilipinos) {							number = 'NF';
 							lastnames[last] = 0;
 						}
 						if (number != 'NF' && parseInt(number) > 3)
@@ -94,17 +104,16 @@ app.get('/', function(req, res) {
 		}
 	});
 	var html = '<pre>';
-	for (var street in out ) {
-	    if (out.hasOwnProperty(street)) {
+	for (var street in streets ) {
+	    if (streets.hasOwnProperty(street)) {
 	        html += street + '<br>';
-	        out[street].forEach(function(number) {
+	        streets[street].forEach(function(number) {
 	        	html += number + '<br>';
 	        });
 	    }
 	}
 	html += '</pre>';
 	res.send(html);
-	//res.send(html);
 });
 
 app.param('name', function(req, res, next, id) {
