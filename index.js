@@ -15,9 +15,14 @@ app.get('/', function(req, res) {
 	var file = fs.readFileSync('lastnames.json');
 	var lastnames = JSON.parse(file);
 
-	var out = '';
+	var out = {};
 	$('.unstyled.grid-list-2.no-overflow > li').each(function() {
 		var address = $('.title', this).text();
+		var addressArray = address.split(' ');
+		var street = addressArray[addressArray.length - 2];
+		var streetNumber = addressArray[0];
+		if (addressArray[1].indexOf('/') > -1)
+			streetNumber += ' ' + addressArray[1]; 
 		var text = $('.subtitle', this).text().trim();
 		if (text.indexOf('No current residents listed for this location') < 0) {
 			name = text.split(' res')[0].split(' and')[0];
@@ -28,8 +33,18 @@ app.get('/', function(req, res) {
 
 			if (lastnames[last] || lastnames[last] == 0) {
 				var number = lastnames[last];
-				if (number != 'NF' && parseInt(number) > 3)
+				if (number != 'NF' && parseInt(number) > 3) {
+
 					console.log(last + ' ' + number + '\n' + address + '\n');
+					if (out[street]) {
+						out[street].push(streetNumber + '\t' + last);
+					}
+					else {
+						out[street] = [streetNumber + '\t' + last];
+					}
+
+
+				}
 			}
 			else {
 				console.log('last name doesn\'t exist!')
@@ -65,7 +80,6 @@ app.get('/', function(req, res) {
 						}
 						if (number != 'NF' && parseInt(number) > 3)
 							console.log(last + ' ' + number + '\n' + address + '\n');
-						out += last + ' ' + number +  '<br>' + address + '<br>';
 
 						fs.writeFile('lastnames.json', JSON.stringify(lastnames, null, 4), function(err) {
 
@@ -79,7 +93,17 @@ app.get('/', function(req, res) {
 			
 		}
 	});
-	res.send('check console');
+	var html = '<pre>';
+	for (var street in out ) {
+	    if (out.hasOwnProperty(street)) {
+	        html += street + '<br>';
+	        out[street].forEach(function(number) {
+	        	html += number + '<br>';
+	        });
+	    }
+	}
+	html += '</pre>';
+	res.send(html);
 	//res.send(html);
 });
 
