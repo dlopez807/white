@@ -33,7 +33,7 @@ app.get('/', function(req, res) {
 		var streetNumber = addressArray[0];
 		if (addressArray[1].indexOf('/') > -1)
 			streetNumber += ' ' + addressArray[1];
-		streetNumber += apt;
+		streetNumber += ' ' + apt;
 
 		// get the last name
 		var text = $('.subtitle', this).text().trim();
