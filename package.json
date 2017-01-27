@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "heroku local",
+    "startold": "node index.js",
+    "deploy": "git push heroku master",
+    "launch": "heroku open"
   },
   "author": "daniel lopez",
   "license": "ISC",
