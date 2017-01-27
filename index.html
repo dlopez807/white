@@ -3,13 +3,35 @@
 <head>
 	<meta charset="UTF-8">
 	<title>white pages survey</title>
+	<style>
+		body {
+			display: none;
+		}
+	</style>
 </head>
 <body>
 	<h1>white pages</h1>
 	<p>insert below the html, like the sample one <a href='/sample'>here</a></p>
 	<form action= '/survey' method='post'>
 		<textarea id='white' name='white'></textarea>
+		<select id='separator' name='separator'>
+			<option value='&#9;'>tab</option>
+			<option value=','>comma</option>
+			<option value=';'>semicolon</option>
+			<option value='.'>period</option>
+		</select>
 		<input type='submit' value='survey'>
 	</form>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js'></script>
+	<script>
+		if (sessionStorage.separator)
+			$('#separator').val(sessionStorage.separator);	
+		$('#separator').change(function(){ 
+			sessionStorage.separator = $(this).val();
+		});
+		$(document).ready(function() {
+			$('body').css('display', 'block');
+		})
+	</script>
 </body>
 </html>

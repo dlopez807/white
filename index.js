@@ -23,10 +23,13 @@ app.get('/sample', function(req, res) {
 
 app.post('/survey', function(req, res) {
 
-	// var html = fs.readFileSync('whitepages.html', 'utf-8', function() {
-	// 	console.log('success');
-	// });
 	var html = req.body.white;
+	var separator = req.body.separator;
+	if (html == '') {
+		html = fs.readFileSync('whitepages.html', 'utf-8', function() {
+			console.log('success');
+		});
+	}
 
 	var $ = cheerio.load(html);
 
@@ -51,7 +54,8 @@ app.post('/survey', function(req, res) {
 		var streetNumber = addressArray[0];
 		if (addressArray[1].indexOf('/') > -1)
 			streetNumber += ' ' + addressArray[1];
-		streetNumber += ' ' + apt;
+		if (apt)
+			streetNumber += ' ' + apt;
 
 		// get the last name
 		var text = $('.subtitle', this).text().trim();
@@ -67,19 +71,19 @@ app.post('/survey', function(req, res) {
 				var number = lastnames[last];
 				if (number != 'NF' && parseInt(number) > 3) {
 
-					console.log(last + ' ' + number + '\n' + address + '\n');
+					//console.log(last + ' ' + number + '\n' + address + '\n');
 					if (streets[street]) {
-						streets[street].push(streetNumber + '\t' + first + ' ' + last + '\t' + number);
+						streets[street].push(streetNumber + separator + first + ' ' + last + separator + number);
 					}
 					else {
-						streets[street] = [streetNumber + '\t' + first + ' ' + last + '\t' + number];
+						streets[street] = [streetNumber + separator + first + ' ' + last + separator + number];
 					}
 
 
 				}
 			}
 			else {
-				console.log('last name doesn\'t exist!')
+				//console.log('last name doesn\'t exist!')
 				var options = {
 					url: 'https://lastnames.myheritage.com/last-name/' + last,
 					method: 'GET'
@@ -107,11 +111,11 @@ app.post('/survey', function(req, res) {
 							lastnames[last] = 0;
 						}
 						if (number != 'NF' && parseInt(number) > 3)
-							console.log(last + ' ' + number + '\n' + address + '\n');
+							//console.log(last + ' ' + number + '\n' + address + '\n');
 
 						fs.writeFile('lastnames.json', JSON.stringify(lastnames, null, 4), function(err) {
 
-						 	console.log('file successfully written')
+						 	//console.log('file successfully written')
 						 });
 					}
 					else
