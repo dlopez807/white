@@ -73,10 +73,10 @@ app.post('/survey', function(req, res) {
 
 					//console.log(last + ' ' + number + '\n' + address + '\n');
 					if (streets[street]) {
-						streets[street].push(streetNumber + separator + first + ' ' + last + separator + number);
+						streets[street].push(streetNumber + separator + street + separator + first + ' ' + last + separator + number);
 					}
 					else {
-						streets[street] = [streetNumber + separator + first + ' ' + last + separator + number];
+						streets[street] = [streetNumber + separator + street + separator + first + ' ' + last + separator + number];
 					}
 
 
@@ -132,7 +132,7 @@ app.post('/survey', function(req, res) {
 	out += '<pre>';
 	for (var street in streets ) {
 	    if (streets.hasOwnProperty(street)) {
-	        out += street + '<br>';
+	        //out += street + '<br>';
 	        streets[street].forEach(function(number) {
 	        	out += number + '<br>';
 	        });
