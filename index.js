@@ -7,6 +7,8 @@ var app = express();
 var path = require('path');
 app.set('port', (process.env.PORT || 8791));
 
+var lastnamesLimit = 10;
+
 app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' })); // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.text({
@@ -69,7 +71,7 @@ app.post('/survey', function(req, res) {
 
 			if (lastnames[last] || lastnames[last] == 0) {
 				var number = lastnames[last];
-				if (number != 'NF' && parseInt(number) > 3) {
+				if (number != 'NF' && parseInt(number) >= lastnamesLimit) {
 
 					//console.log(last + ' ' + number + '\n' + address + '\n');
 					if (streets[street]) {
@@ -110,7 +112,7 @@ app.post('/survey', function(req, res) {
 						if (noFilipinos) {							number = 'NF';
 							lastnames[last] = 0;
 						}
-						if (number != 'NF' && parseInt(number) > 3)
+						//if (number != 'NF' && parseInt(number) > 3)
 							//console.log(last + ' ' + number + '\n' + address + '\n');
 
 						fs.writeFile('lastnames.json', JSON.stringify(lastnames, null, 4), function(err) {
