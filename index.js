@@ -36,11 +36,17 @@ app.post('/survey', function(req, res) {
 	var file = fs.readFileSync('lastnames.json');
 	var lastnames = JSON.parse(file);
 
+	// selectors for item, address, and name
+	var itemSelector = '.associated-people.card-list-wrapper ul .card-btn';//'.unstyled.grid-list-2.no-overflow > li';
+	var addressSelector = 'p.assoicated-link-title';
+	var nameSelector = 'p.grey-subtitle';
+	var filipinoLimit = 9;
+
 	var streets = {};
-	$('.unstyled.grid-list-2.no-overflow > li').each(function() {
+	$(itemSelector).each(function() {
 
 		// get the address
-		var address = $('.title', this).text();
+		var address = $(addressSelector, this).text();
 		var addressArray = address.split(' ');
 		var apt = '';
 		if (addressArray[addressArray.length - 2] != 'Apt') {
@@ -58,7 +64,7 @@ app.post('/survey', function(req, res) {
 			streetNumber += ' ' + apt;
 
 		// get the last name
-		var text = $('.subtitle', this).text().trim();
+		var text = $(nameSelector, this).text().trim();
 		if (text.indexOf('No current residents listed for this location') < 0) {
 			name = text.split(' res')[0].split(' and')[0];
 			var names = name.split(' ');
@@ -69,7 +75,7 @@ app.post('/survey', function(req, res) {
 
 			if (lastnames[last] || lastnames[last] == 0) {
 				var number = lastnames[last];
-				if (number != 'NF' && parseInt(number) > 3) {
+				if (number != 'NF' && parseInt(number) > filipinoLimit) {
 
 					//console.log(last + ' ' + number + '\n' + address + '\n');
 					if (streets[street]) {
@@ -110,7 +116,7 @@ app.post('/survey', function(req, res) {
 						if (noFilipinos) {							number = 'NF';
 							lastnames[last] = 0;
 						}
-						if (number != 'NF' && parseInt(number) > 3)
+						if (number != 'NF' && parseInt(number) > filipinoLimit)
 							//console.log(last + ' ' + number + '\n' + address + '\n');
 
 						fs.writeFile('lastnames.json', JSON.stringify(lastnames, null, 4), function(err) {
