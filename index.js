@@ -25,7 +25,6 @@ app.post('/survey', function(req, res) {
 
 	var html = req.body.white;
 	var separator = req.body.separator;
-	console.log(req.body.limit);
 	var filipinoLimit = parseInt(req.body.limit) || 15;
 	if (html == '') {
 		html = fs.readFileSync('whitepages.html', 'utf-8', function() {
