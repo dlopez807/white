@@ -25,6 +25,8 @@ app.post('/survey', function(req, res) {
 
 	var html = req.body.white;
 	var separator = req.body.separator;
+	console.log(req.body.limit);
+	var filipinoLimit = parseInt(req.body.limit) || 15;
 	if (html == '') {
 		html = fs.readFileSync('whitepages.html', 'utf-8', function() {
 			console.log('success');
@@ -40,7 +42,6 @@ app.post('/survey', function(req, res) {
 	var itemSelector = '.associated-people.card-list-wrapper ul .card-btn';//'.unstyled.grid-list-2.no-overflow > li';
 	var addressSelector = 'p.assoicated-link-title';
 	var nameSelector = 'p.grey-subtitle';
-	var filipinoLimit = 9;
 
 	var streets = {};
 	$(itemSelector).each(function() {
@@ -75,7 +76,7 @@ app.post('/survey', function(req, res) {
 
 			if (lastnames[last] || lastnames[last] == 0) {
 				var number = lastnames[last];
-				if (number != 'NF' && parseInt(number) > filipinoLimit) {
+				if (number != 'NF' && parseInt(number) >= filipinoLimit) {
 
 					//console.log(last + ' ' + number + '\n' + address + '\n');
 					if (streets[street]) {
@@ -116,7 +117,7 @@ app.post('/survey', function(req, res) {
 						if (noFilipinos) {							number = 'NF';
 							lastnames[last] = 0;
 						}
-						if (number != 'NF' && parseInt(number) > filipinoLimit)
+						if (number != 'NF' && parseInt(number) >= filipinoLimit)
 							//console.log(last + ' ' + number + '\n' + address + '\n');
 
 						fs.writeFile('lastnames.json', JSON.stringify(lastnames, null, 4), function(err) {
