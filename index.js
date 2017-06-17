@@ -38,7 +38,7 @@ app.post('/survey', function(req, res) {
 	var lastnames = JSON.parse(file);
 
 	// selectors for item, address, and name
-	var itemSelector = '.associated-people.card-list-wrapper ul .card-btn';//'.unstyled.grid-list-2.no-overflow > li';
+	var itemSelector = 'ul.neighbors > li.card-btn';//'.associated-people.card-list-wrapper ul .card-btn';//'.unstyled.grid-list-2.no-overflow > li';
 	var addressSelector = 'p.assoicated-link-title';
 	var nameSelector = 'p.grey-subtitle';
 
