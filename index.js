@@ -66,7 +66,8 @@ app.post('/survey', function(req, res) {
 		// get the last name
 		var text = $(nameSelector, this).text().trim();
 		if (text.indexOf('No current residents listed for this location') < 0) {
-			name = text.split(' res')[0].split(' and')[0];
+			name = text.split(' res')[0].split(' and')[0].split(' +')[0].split(' &')[0];
+			console.log(name);
 			var names = name.split(' ');
 			var first = names[0];
 			var last = names[names.length - 1];
