@@ -7,6 +7,7 @@ var app = express();
 var path = require('path');
 app.set('port', (process.env.PORT || 8791));
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json({limit: '50mb'})); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' })); // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.text({
@@ -135,19 +136,26 @@ app.post('/survey', function(req, res) {
 	var out = '<a href=\'/\'>Go back</a><br><br>';
 	out += 'Reload a couple times just to make sure<br><br>';
 	out += 'Copy below and paste into Google Sheets<br><br>';
-	out += '(might need to paste in notepad first to fix formatting)';
-	out += '<pre>';
+	out += '(might need to paste in notepad first to fix formatting)<br>';
+	out += '<textarea id="streets" style="width: 100%;min-height: 500px;">';
 	for (var street in streets ) {
 	    if (streets.hasOwnProperty(street)) {
 	        //out += street + '<br>';
 	        streets[street].forEach(function(number) {
-	        	out += number + '<br>';
+	        	out += number + '\n';
 	        });
 	    }
 	}
-	out += '</pre>';
+	out += '</textarea>';
+	out += '<script>document.getElementById("streets").focus();</script>'
 	res.send(out);
 });
+
+app.post('/bacon', function(req, res) {
+	console.log('bacon');
+	res.contentType('json');
+	res.send( {bacon: JSON.stringify({response:'juice'}) });
+})
 
 app.get('/lastnames', function(req, res) {
 	res.sendFile(path.join(__dirname + '/lastnames.json'));

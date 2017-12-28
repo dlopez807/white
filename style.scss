@@ -1,0 +1,113 @@
+$blue: rgb(139, 157, 195);
+$darkBlue: rgb(059, 089, 152);
+$lightBlue: rgb(223, 227, 238);
+$gray: rgb(247, 247, 247);
+$white: rgb(255, 255, 255);
+
+* {
+	margin: 0;
+	padding: 0;
+	//font-size: 3.25em;
+	//font-weight: 700;
+	font-family: Arial;
+}
+
+html, body {
+	height: 100%;
+	width: 100%;
+}
+
+h1 {
+	color: $white;
+	background: $darkBlue;
+	width: 100%;
+	height: 10%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+p.instructions {
+	height: 5%;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	font-weight: 700;
+}
+
+form {
+	display: flex;
+	width: 100%;
+	height: 85%;
+}
+
+.text-container, .options-container {
+	width: 50%;
+	padding: 10px;
+}
+
+textarea {
+	width: 100%;
+	min-height: 500px;
+}
+
+select, option, input  {
+	text-align: center;
+	box-sizing: border-box;
+	height: 50px;
+	font-size: 20px;
+}
+
+#separator, #limit {
+	width: 50%;
+	float: left;
+	margin: 10px;
+}
+
+#submit {
+	width: 100%;
+	background: $darkBlue;
+	color: white;
+}
+
+::-webkit-input-placeholder {
+	text-align: center;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+	text-align: center;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+	text-align: center;  
+}
+
+:-ms-input-placeholder {  
+	text-align: center; 
+}
+
+@media only screen and (max-device-width: 375px) {
+	html, body {
+		font-size: 16px;
+	}
+    // #content {
+    //     height: 667px;
+    //     width: 375px;
+    //     font-size: 19px;
+    // }
+    .text-container, .options-container {
+		width: 100%;
+	}
+
+	form {
+		flex-wrap: wrap;
+	}
+
+	textarea {
+		min-height: 100%;
+	}
+
+	#separator, #limit, textarea {
+		border: 1px black solid;
+	}
+}
