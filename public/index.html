@@ -13,18 +13,23 @@
 <body>
 	<h1>white pages</h1>
 	<p class='instructions'>insert below the html, like the sample one <a href='/sample'>here</a></p>
-	<form id='wp' action= '/survey' method='post'>
+	<form id='wp' action='/survey' method='post'>
 		<div class='text-container'>
 			<textarea id='white' name='white'></textarea>
+			<div id='data'></div>
 		</div>
 		<div class='options-container'>
-			<select id='separator' name='separator'>
-				<option value='&#9;'>tab</option>
-				<option value=','>comma</option>
-				<option value=';'>semicolon</option>
-				<option value='.'>period</option>
-			</select>
-			<input id='limit' name='limit' type='number' value='10'>
+			<div id='separator-container'>
+				<select id='separator' name='separator'>
+					<option value='&#9;'>tab</option>
+					<option value=','>comma</option>
+					<option value=';'>semicolon</option>
+					<option value='.'>period</option>
+				</select>
+			</div>
+			<div id='limit-container'>
+				<input id='limit' name='limit' type='number' value='10'>
+			</div>
 			<input id='submit' type='submit' value='survey'>
 		</div>
 	</form>

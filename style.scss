@@ -48,7 +48,7 @@ form {
 
 textarea {
 	width: 100%;
-	min-height: 500px;
+	min-height: 250px;
 }
 
 select, option, input  {
@@ -58,16 +58,30 @@ select, option, input  {
 	font-size: 20px;
 }
 
-#separator, #limit {
-	width: 50%;
+#separator-container, #limit-container {
 	float: left;
-	margin: 10px;
+	box-sizing: border-box;
+}
+
+#separator-container {
+	width: 75%;
+	padding: 0 10px 10px 0;
+}
+
+#limit-container {
+	width: 25%;
+	padding: 0 0 10px 10px;
+}
+
+#separator, #limit {
+	width: 100%;
 }
 
 #submit {
 	width: 100%;
 	background: $darkBlue;
 	color: white;
+	margin-top: 10px;
 }
 
 ::-webkit-input-placeholder {
@@ -88,13 +102,9 @@ select, option, input  {
 
 @media only screen and (max-device-width: 375px) {
 	html, body {
-		font-size: 16px;
+		font-size: 40px;
 	}
-    // #content {
-    //     height: 667px;
-    //     width: 375px;
-    //     font-size: 19px;
-    // }
+
     .text-container, .options-container {
 		width: 100%;
 	}
@@ -104,10 +114,15 @@ select, option, input  {
 	}
 
 	textarea {
-		min-height: 100%;
+		min-height: 50%;
 	}
 
 	#separator, #limit, textarea {
 		border: 1px black solid;
+	}
+
+	select, option, input {
+		height: 150px;
+		font-size: 50px;
 	}
 }
