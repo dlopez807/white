@@ -9,7 +9,8 @@
     "deploy": "git push heroku master",
     "launch": "heroku open",
     "build": "webpack",
-    "test": "webpack-dev-server --port 5000 --content-base public/ --hot"
+    "test": "webpack-dev-server --port 5000 --content-base public/ --hot",
+    "dev": "nodemon index.js"
   },
   "author": "daniel lopez",
   "license": "ISC",

@@ -156,12 +156,6 @@ app.post('/survey', function(req, res) {
 	res.send(out);
 });
 
-app.post('/bacon', function(req, res) {
-	console.log('bacon');
-	res.contentType('json');
-	res.send( {bacon: JSON.stringify({response:'juice'}) });
-})
-
 app.get('/lastnames', function(req, res) {
 	res.sendFile(path.join(__dirname + '/lastnames.json'));
 });
@@ -214,6 +208,9 @@ app.get('/lastname/:name', function(req, res) {
 		//  });
 	});	
 });
+
+var bacon = require('./bacon');
+app.use('/bacon', bacon);
 
 app.listen(app.get('port'));
 console.log('magic happens on port ' + app.get('port'));

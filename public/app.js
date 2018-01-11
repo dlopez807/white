@@ -38,3 +38,7 @@ $(document).ready(function() {
 	$('body').css('display', 'block');
 	$('#white').focus();
 })
+
+$('#territories > tr').each(function() {
+	console.log($('territory', this).innerHtml());
+})
