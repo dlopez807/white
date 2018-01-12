@@ -31,7 +31,7 @@ sword.get('/:bookch/:verse', function(req, res) {
 		if (!error) {
 			console.log('search', search);
 			var $ = cheerio.load(html);
-			var out = '';
+			//var out = '';
 			var reference = $('.results .caption .lnk').text();
 			if (reference != '') {
 				var text = '';
@@ -41,19 +41,23 @@ sword.get('/:bookch/:verse', function(req, res) {
 				    .remove()   //remove all the children
 				    .end()	 //again go back to selected element
 					.text();
-					text += ' ';
 				 });
-				out = text + '(' + reference + ')';
+				//out = text + '(' + reference + ')';
 				//res.send(out);
 				res.contentType('json');
 				//res.send( {bacon: JSON.stringify({response:'juice'}) });
 				res.send({
+					success: true,
 					text: text.trim(),
 					reference: reference
 				});
 			}
-			else
-				res.send('not found');
+			else {	
+				res.contentType('json');
+				res.send({
+					success: false
+				});
+			}
 		}
 		else
 			console.log('error');
