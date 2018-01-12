@@ -84,15 +84,17 @@ sword.get('/dailytext', function(req, res) {
 				text = $('#p36').text();
 				reference = $('#p36 a em').text();
 				comment = $('#p37').text();
+				dailyText = date + '\n' + text + '\n' + comment;
 				res.contentType('json');
 				res.send({
 					success: true,
 					date: date,
 					themeScripture: {
-						text: text,//.replace('.—.', ''),
+						text: text,
 						reference: reference
 					},
-					comment: comment
+					comment: comment,
+					dailyText: dailyText
 				});
 			}
 			else {	
