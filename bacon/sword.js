@@ -64,4 +64,47 @@ sword.get('/:bookch/:verse', function(req, res) {
 	});
 });
 
+sword.get('/dailytext', function(req, res) {
+
+	var url = 'https://wol.jw.org/en/wol/h/r1/lp-e';
+	var options = {
+		url: url,
+		method: 'GET'
+	};
+
+	request(options, function(error, response, html) {
+
+		if (!error) {
+			console.log('daily text');
+			var $ = cheerio.load(html);
+			var dailyText = $('#dailyText').text();
+			if (dailyText != '') {
+				var date, text, reference, comment;
+				date = $('#p35').text();
+				text = $('#p36').text();
+				reference = $('#p36 a em').text();
+				comment = $('#p37').text();
+				res.contentType('json');
+				res.send({
+					success: true,
+					date: date,
+					themeScripture: {
+						text: text,//.replace('.—.', ''),
+						reference: reference
+					},
+					comment: comment
+				});
+			}
+			else {	
+				res.contentType('json');
+				res.send({
+					success: false
+				});
+			}
+		}
+		else
+			console.log('error');
+	});
+});
+
 module.exports = sword;
