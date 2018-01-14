@@ -4,8 +4,13 @@ var bodyParser = require('body-parser');
 bacon.use(bodyParser.urlencoded({ extended: true }));
 
 bacon.get('/', function(req, res) {
-	console.log('bacon backend :B');
-	res.send('bacon backend :B');
+	var message = 'bacon backend :B';
+	console.log(message);
+	res.contentType('json');
+	res.send({
+		success: true,
+		message: message
+	});
 });
 
 bacon.post('/', function(req, res) {
