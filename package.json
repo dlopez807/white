@@ -20,6 +20,7 @@
     "express": "^4.14.0",
     "fs": "0.0.1-security",
     "fs-extra": "^2.0.0",
+    "moment": "^2.20.1",
     "request": "^2.79.0"
   },
   "devDependencies": {

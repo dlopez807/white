@@ -1,6 +1,7 @@
 var sword = require('express').Router();
 var request = require('request');
 var cheerio = require('cheerio');
+var moment = require('moment');
 
 sword.param('bookch', function(req, res, next, id) {
 	next();
@@ -66,7 +67,11 @@ sword.get('/:bookch/:verse', function(req, res) {
 
 sword.get('/dailytext', function(req, res) {
 
-	var url = 'https://wol.jw.org/en/wol/h/r1/lp-e';
+	var year = moment().format('YYYY');
+	var month = moment().format('M');
+	var day = moment().format('D');
+	var url = 'https://wol.jw.org/en/wol/dt/r1/lp-e/' + year + '/' + month + '/' + day;
+	//var url = 'https://wol.jw.org/en/wol/h/r1/lp-e';
 	var options = {
 		url: url,
 		method: 'GET'
@@ -77,22 +82,19 @@ sword.get('/dailytext', function(req, res) {
 		if (!error) {
 			console.log('daily text');
 			var $ = cheerio.load(html);
-			var dailyText = $('#dailyText').text();
-			if (dailyText != '') {
+			var dailyTextSelector = '.todayItems .todayItem.pub-es' + moment().format('YY');
+			var dailyTextElement = $(dailyTextSelector).text();
+			if (dailyTextElement != '') {
 				var date, text, reference, comment;
-				date = $('#p35').text();
-				text = $('#p36').text();
-				reference = $('#p36 a em').text();
-				comment = $('#p37').text();
+				date = $(dailyTextSelector + ' header h2').text();
+				text = $(dailyTextSelector + ' p.themeScrp').text();
+				comment = $(dailyTextSelector + ' .sb').text();
 				dailyText = date + '\n' + text + '\n' + comment;
 				res.contentType('json');
 				res.send({
 					success: true,
 					date: date,
-					themeScripture: {
-						text: text,
-						reference: reference
-					},
+					text: text,
 					comment: comment,
 					dailyText: dailyText
 				});
