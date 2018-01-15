@@ -22,6 +22,9 @@ sword.get('/:bookch/:verse', function(req, res) {
 	var search = bookch + ':' + verse;
 
 	var url = 'http://wol.jw.org/en/wol/l/r1/lp-e?q=' + search;
+
+	// tagalog url
+	//var url = 'https://wol.jw.org/tl/wol/l/r27/lp-tg?q=' + search;
 	var options = {
 		url: url,
 		method: 'GET'
