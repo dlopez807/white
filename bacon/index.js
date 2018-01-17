@@ -21,5 +21,7 @@ bacon.post('/', function(req, res) {
 
 var sword = require('./sword');
 bacon.use('/sword', sword);
+var notes = require('./notes');
+bacon.use('/notes', notes)
 
 module.exports = bacon;
