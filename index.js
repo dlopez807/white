@@ -24,6 +24,10 @@ app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/index.html'));
 });
 
+app.get('/espn', function(req, res) {
+	res.sendFile(path.join(__dirname + '/resistance.html'));
+});
+
 app.get('/sample', function(req, res) {
 	res.sendFile(path.join(__dirname + '/whitepages.html'));
 });
@@ -38,6 +42,7 @@ app.post('/survey', function(req, res) {
 			console.log('success');
 		});
 	}
+	res.send(html);
 
 	var $ = cheerio.load(html);
 
