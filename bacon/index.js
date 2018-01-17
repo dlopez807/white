@@ -23,5 +23,7 @@ var sword = require('./sword');
 bacon.use('/sword', sword);
 var notes = require('./notes');
 bacon.use('/notes', notes)
+var espn = require('./espn');
+bacon.use('/espn', espn);
 
 module.exports = bacon;

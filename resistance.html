@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='UTF-8' />
+	<title>resistance</title>
+	<!-- <style>
+		#matchup {
+			display: none;
+		}
+	</style> -->
+</head>
+<body>
+	<form id='espn'>
+		<textarea id='team1' name='team1'></textarea>
+		<textarea id='team2' name='team2'></textarea>
+		<input id='submit' type='submit' value='go'>
+	</form>
+	<div id='matchup'>
+		<table class='team1'>
+			<tbody>
+
+			</tbody>
+		</table>
+		<table class='scoreboard'>
+			<tbody>
+				
+			</tbody>
+		</table>
+		<table class='team2'>
+			<tbody>
+
+			</tbody>
+		</table>
+	</div>
+</body>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js'></script>
+	<script type="text/javascript">
+		$('#espn').submit(function(event) {
+			event.preventDefault();
+			$.ajax({
+				url: '/bacon/espn',
+				method: 'POST',
+				data: $('form').serialize(),
+				success: function(data) {
+					console.log('success');
+					console.log(data);
+					//$('#data').empty().append(data);
+					displayMatchup(data);
+				},
+				error: function(data) {
+					console.log('error');
+				}
+			});
+		})
+
+		function displayMatchup(matchup) {
+			$('#matchup').css('display', 'block');
+			var team1 = matchup.team1;
+			var team2 = matchup.team2;
+			var team1Table = createTable(team1);
+			$('.team1 tbody').append(team1Table);
+			var team2Table = createTable(team2);
+			$('.team2 tbody').append(team2Table);
+			var scoreboard = createScoreboard(matchup);
+			$('.scoreboard tbody').append(scoreboard);
+		}
+
+		function createTable(team) {
+			var table = '<tr><th>name</th><th>FGM / FGA</th><th>FG%</th><th>FTM / FTA</th><th>FT%</th><th>3PM</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PTS</th><th>GP</th></tr>';
+			team.players.forEach(function(player) {
+				table += '<tr>';
+				table += '<td>' + player.name + '</td>';
+				table += '<td>' + player.fgm + ' / ' + player.fga + '</td>';
+				table += '<td>' + (player.fga == 0 ? 0 : (Math.round(player.fgm / player.fga * 100) / 100)) + '</td>';
+				table += '<td>' + player.ftm + ' / ' + player.fta + '</td>';
+				table += '<td>' + (player.fta == 0 ? 0 : (Math.round(player.ftm / player.fta * 100) / 100)) + '</td>';
+				table += '<td>' + player.tpm + '</td>';
+				table += '<td>' + player.reb + '</td>';
+				table += '<td>' + player.ast + '</td>';
+				table += '<td>' + player.stl + '</td>';
+				table += '<td>' + player.blk + '</td>';
+				table += '<td>' + player.to + '</td>';
+				table += '<td>' + player.pts + '</td>';
+				table += '<td><input value="' + player.games + '"/></td>';
+				table += '</tr>';
+			});
+			return table;
+		}
+		function createScoreboard(matchup) {
+			var table = '<tr><th>team</th><th>FG%</th><th>FT%</th><th>3PM</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PTS</th><th>SCORE</th></tr>';
+			matchup = findScore(matchup);
+			var matchupArray = [matchup.team1, matchup.team2];			
+			matchupArray.forEach(function(team) {
+				var totalcats = team.totalcats;
+				table += '<tr>';
+				table += '<td>' + team.teamname + '</td>';
+				table += '<td>' + (totalcats.fga == 0 ? 0 : (Math.round(totalcats.fgm / totalcats.fga * 1000) / 1000)) + '</td>';
+				table += '<td>' + (totalcats.fta == 0 ? 0 : (Math.round(totalcats.ftm / totalcats.fta * 1000) / 1000)) + '</td>';
+				table += '<td>' + totalcats.tpm + '</td>';
+				table += '<td>' + totalcats.reb + '</td>';
+				table += '<td>' + totalcats.ast + '</td>';
+				table += '<td>' + totalcats.stl + '</td>';
+				table += '<td>' + totalcats.blk + '</td>';
+				table += '<td>' + totalcats.to + '</td>';
+				table += '<td>' + totalcats.pts + '</td>';
+				table += '<td>' + team.score + '</td>';
+				table += '</tr>';
+			});
+			return table;
+		}
+
+		function findScore(matchup) {
+			var team1Score = 0;
+			var team2Score = 0;
+			var cats = ['fpg, ftp', 'tpm', 'reb', 'ast', 'stl', 'blk', 'to', 'pts'];
+			cats.forEach(function(cat) {
+				if (cat == 'fpg')
+					matchup.team1.totalcats.fgm / matchup.team1.totalcats.fga > matchup.team2.totalcats.fgm / matchup.team2.totalcats.fga ? team1Score++ : team2Score++;
+				else if (cat == 'ftp')
+					matchup.team1.totalcats.ftm / matchup.team1.totalcats.fta > matchup.team2.totalcats.ftm / matchup.team2.totalcats.fta ? team1Score++ : team2Score++;
+				else 
+					matchup.team1.totalcats[cat] > matchup.team2.totalcats[cat] ? team1Score++ : team2Score++;
+			})
+			matchup.team1.score = team1Score;
+			matchup.team2.score = team2Score;
+			return matchup;
+		}
+	</script>
+</html>
