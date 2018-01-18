@@ -43,11 +43,12 @@ notes.route('/')
 		note.title = req.body.title;
 		note.body = req.body.body;
 		note.user = req.body.user;
-		note.save(function(err) {
+		note.save(function(err, note) {
 			if (err)
 				res.send(err);
 			res.json({
-				message: 'note created'
+				message: 'note created',
+				note: note
 			})
 		})
 	})
