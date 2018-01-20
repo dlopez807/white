@@ -25,5 +25,7 @@ var notes = require('./notes');
 bacon.use('/notes', notes)
 var espn = require('./espn');
 bacon.use('/espn', espn);
+var codes = require('./codes');
+bacon.use('/codes', codes);
 
 module.exports = bacon;
