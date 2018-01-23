@@ -25,10 +25,6 @@ notes.use(function(req, res, next) {
 	next();
 })
 
-var request = require('request');
-var cheerio = require('cheerio');
-var moment = require('moment');
-
 // notes.param('noteid', function(req, res, next, id) {
 // 	next();
 // });

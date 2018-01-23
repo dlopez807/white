@@ -40,6 +40,7 @@ codes.route('/')
 			if (err)
 				res.send(err);
 			res.json({
+				success: true,
 				message: 'code created',
 				code: code
 			})
@@ -50,7 +51,18 @@ codes.route('/')
 		Code.find(function(err, codes) {
 			if (err)
 				res.send(err);
-			res.json(codes);
+
+			if (codes) {
+				res.json({
+					success: true,
+					codes
+				});
+			}
+			else {	
+				res.json({
+					success: false
+				});
+			}
 		})
 	});
 
@@ -61,7 +73,14 @@ codes.route('/:name')
 		Code.findByName(req.params.name, function(err, code) {
 			if (err)
 				res.send(err);
-			res.json(code);
+
+			if (code)
+				res.json({
+					success: true,
+					code
+				});
+			else
+				res.json({success: false})
 		})
 	})
 
