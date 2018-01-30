@@ -36,7 +36,7 @@ sword.get('/:bookch/:verse', function(req, res) {
 			console.log('search', search);
 			var $ = cheerio.load(html);
 			//var out = '';
-			var reference = $('.results .caption .lnk').text();
+			var reference = $('.results .caption').text();
 			if (reference != '') {
 				var text = '';
 				 $('.bibleCitation article p span').each(function() {

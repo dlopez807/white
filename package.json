@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "heroku local",
+    "start": "nodemon index.js",
+    "startheroku": "heroku local",
     "startold": "node index.js",
     "deploy": "git push heroku master",
     "launch": "heroku open",
     "build": "webpack",
-    "test": "webpack-dev-server --port 5000 --content-base public/ --hot",
-    "dev": "nodemon index.js"
+    "test": "webpack-dev-server --port 5000 --content-base public/ --hot"
   },
   "author": "daniel lopez",
   "license": "ISC",
