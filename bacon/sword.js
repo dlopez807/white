@@ -66,13 +66,11 @@ sword.get('/:bookch/:verse', function(req, res) {
 	});
 });
 
-sword.get('/dailytext', function(req, res) {
-
-	var year = moment().format('YYYY');
-	var month = moment().format('M');
-	var day = moment().format('D');
-	var url = 'https://wol.jw.org/en/wol/dt/r1/lp-e/' + year + '/' + month + '/' + day;
-	//var url = 'https://wol.jw.org/en/wol/h/r1/lp-e';
+sword.get('/dailytext/:year?/:month?/:day?', function(req, res) {
+	var year = req.params.year || moment().format('YYYY');
+	var month = req.params.month || moment().format('M');
+	var day = req.params.day || moment().format('D');
+	var url = `https://wol.jw.org/en/wol/dt/r1/lp-e/${year}/${month}/${day}`;
 	var options = {
 		url: url,
 		method: 'GET'
