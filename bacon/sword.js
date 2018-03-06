@@ -35,21 +35,19 @@ sword.get('/:bookch/:verse', function(req, res) {
 		if (!error) {
 			console.log('search', search);
 			var $ = cheerio.load(html);
-			//var out = '';
-			var reference = $('.results .caption').text();
+			var referenceSelector = '.card .docTitle'
+			var textSelector = '.bibleCitation article p span';
+			var reference = $(referenceSelector).text();
 			if (reference != '') {
 				var text = '';
-				 $('.bibleCitation article p span').each(function() {
+				 $(textSelector).each(function() {
 				 	text += $(this).clone()    //clone the element
 				    .children() //select all the children
 				    .remove()   //remove all the children
 				    .end()	 //again go back to selected element
 					.text();
 				 });
-				//out = text + '(' + reference + ')';
-				//res.send(out);
 				res.contentType('json');
-				//res.send( {bacon: JSON.stringify({response:'juice'}) });
 				res.send({
 					success: true,
 					text: text.trim(),
