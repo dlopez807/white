@@ -27,5 +27,9 @@ var espn = require('./espn');
 bacon.use('/espn', espn);
 var codes = require('./codes');
 bacon.use('/codes', codes);
+var apps = require('./apps');
+bacon.use('/apps', apps);
+var trank = require('./trank');
+bacon.use('/trank', trank);
 
 module.exports = bacon;
