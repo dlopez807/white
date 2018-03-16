@@ -1,15 +1,4 @@
 var notes = require('express').Router();
-var mongoose = require('mongoose');
-var mongoDB = 'mongodb://admin:admin@ds019856.mlab.com:19856/niello';
-mongoose.connect(mongoDB, {
-  useMongoClient: true,
-  /* other options */
-});
-
-mongoose.Promise = global.Promise;
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 var bodyParser = require('body-parser');
 

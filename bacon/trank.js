@@ -2,19 +2,6 @@ var trank = require('express').Router();
 var request = require('request');
 var cheerio = require('cheerio');
 var moment = require('moment');
-// var mongoose = require('mongoose');
-// var mongoDB = 'mongodb://admin:admin@ds019856.mlab.com:19856/niello';
-// mongoose.connect(mongoDB, {
-//   useMongoClient: true,
-//   /* other options */
-// });
-
-// mongoose.Promise = global.Promise;
-
-// var db = mongoose.connection;
-// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-
-// var bodyParser = require('body-parser');
 
 var SmashCalTournament = require('../models/smash-cal-tournament');
 var Tournament = require('../models/tournament');
@@ -222,12 +209,24 @@ trank.route('/tournaments')
 		})
 	});
 
-trank.route('/tournaments/:slug')
+trank.route('/tournaments/slug/:slug')
 	.get(function(req, res) {
 		Tournament.findOne({slug: req.params.slug}, function(err, tournament) {
 			if (err)
 				res.send(err);
 			res.json(tournament);
+		})
+	});
+
+trank.route('/tournaments/slug/:slug/score')
+	.get(function(req, res) {
+		Tournament.findOne({slug: req.params.slug}, function(err, tournament) {
+			if (err)
+				res.send(err);
+			res.json({
+				slug: tournament.slug,
+				score: tournament.score
+			});
 		})
 	});
 
@@ -237,9 +236,8 @@ trank.route('/tournaments/update')
 			if (err)
 				res.send(err);
 			
-			var tournamentSlugs = slugs.filter(slug => slug.melee).map(slug => slug.slug);
-			
-			var tournaments = [];
+			var tournamentSlugs = slugs.filter(slug => slug.melee && slug.slug).map(slug => slug.slug);
+
 			tournamentSlugs.forEach(function(slug) {
 
 				var tournament = slug;
@@ -258,6 +256,12 @@ trank.route('/tournaments/update')
 					var participants = data.participants || [];
 					var attendees = participants.length;
 
+					var {
+						rankedPlayers,
+						score,
+						topPlayers
+					} = getRankedPlayers(participants);
+
 					var query = {
 						name: data.tournament.name,
 					};
@@ -266,7 +270,10 @@ trank.route('/tournaments/update')
 						date,
 						dateFormatted: moment(date).format('MMMM Do YYYY'),
 						attendees,
-						link: `https://smash.gg/tournament/${tournament}`
+						link: `https://smash.gg/tournament/${tournament}`,
+						score,
+						rankedPlayers,
+						topPlayers
 					};
 					var options = {
 						new: true,
@@ -285,11 +292,55 @@ trank.route('/tournaments/update')
 					return a.date - b.date;
 				}));
 			});
-			// res.json({
-			// 	tournaments
-			// });
-			//res.json(slugs.filter(slug => slug.melee).map(slug => slug.slug));
 		});
+	})
+
+trank.route('/smashgg/:slug')
+	.get(function(req, res) {
+		var tournament = req.params.slug;
+		var url = `https://api.smash.gg/tournament/${tournament}?expand[]=participants&mutations[]=playerData`;
+
+		var options = {
+			url: url,
+			method: 'GET'
+		};
+
+		request(options, function(error, response, body) {
+			var json = JSON.parse(body);			
+			res.json({
+				...json
+			});
+		})
 	});
+
+const CURRENT_SSBM_RANK_ID = 3454;
+const RANK_LIMIT = 50;
+const TOP_PLAYERS_LIMIT = 10;
+
+function getRankedPlayers(players) {
+	let rankedPlayers = [];
+	let totalScore = 0;
+	players.forEach(player => {
+		const id = player.playerId;
+		const rankings = player.mutations.players[id].rankings;
+		const rankingSSBM = rankings.find(ranking => ranking.iterationId == CURRENT_SSBM_RANK_ID)
+		if (rankingSSBM && rankingSSBM.rank <= RANK_LIMIT) {
+			const score = (RANK_LIMIT + 1) - rankingSSBM.rank;
+			rankedPlayers.push({
+				gamerTag: player.gamerTag,
+				prefix: player.prefix,
+				rank: rankingSSBM.rank,
+				score
+			});
+			totalScore += score;
+		}
+	});
+	rankedPlayers.sort( (a, b) => a.rank - b.rank );
+	return {
+		rankedPlayers,
+		score: totalScore,
+		topPlayers: rankedPlayers.slice(0, TOP_PLAYERS_LIMIT)
+	};
+}
 
 module.exports = trank;
