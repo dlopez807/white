@@ -15,14 +15,15 @@
   "author": "daniel lopez",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.16.0",
+    "body-parser": "^1.18.3",
     "cheerio": "^0.22.0",
     "express": "^4.14.0",
     "fs": "0.0.1-security",
     "fs-extra": "^2.0.0",
     "moment": "^2.20.1",
     "mongoose": "^4.13.9",
-    "request": "^2.79.0"
+    "nodemon": "^1.18.5",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "css-loader": "^0.28.4",

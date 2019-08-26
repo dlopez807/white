@@ -189,7 +189,8 @@ trank.route('/list/update')
 				else {	
 					res.contentType('json');
 					res.send({
-						success: false
+						success: false,
+						html
 					});
 				}
 			}
