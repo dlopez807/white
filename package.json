@@ -21,7 +21,7 @@
     "fs": "0.0.1-security",
     "fs-extra": "^2.0.0",
     "moment": "^2.20.1",
-    "mongoose": "^4.13.9",
+    "mongoose": "^5.7.5",
     "nodemon": "^1.18.5",
     "request": "^2.88.0"
   },
